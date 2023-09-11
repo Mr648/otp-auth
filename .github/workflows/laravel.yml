@@ -27,9 +27,6 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
 
-      - name: Generating app key
-        run: php artisan key:generate
-
       - name: Run tests and collect coverage
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
