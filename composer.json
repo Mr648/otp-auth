@@ -37,11 +37,20 @@
         "php": "^8.0.2"
     },
 
+
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "phpunit/phpunit": "^9.0"
+    },
+
     "extra": {
         "laravel": {
             "providers": [
-                "OtpServiceProvider"
-            ]
+                "RahmatWaisi\\OtpAuth\\Providers\\OtpServiceProvider"
+            ],
+            "aliases": {
+                "Otp": "STS\\ZipStream\\OtpGenerator"
+            }
         }
     }
 }
