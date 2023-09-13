@@ -20,7 +20,7 @@ class OtpBuilderTest extends TestCase
     }
 
     /**
-     * Test with default settings
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::createFrom
      */
     public function test_builder_with_default_settings(): void
     {
@@ -57,7 +57,13 @@ class OtpBuilderTest extends TestCase
     }
 
     /**
-     * Test with default settings
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::builder
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpBuilder::withPrefix
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpBuilder::withKey
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpBuilder::withType
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpBuilder::withTtl
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpBuilder::withLength
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpBuilder::withDefaultSettings
      */
     public function test_builder_with_custom_settings(): void
     {
@@ -88,8 +94,20 @@ class OtpBuilderTest extends TestCase
         $this->assertTrue(is_string($otp));
 
         $this->assertTrue(cache()->has("dummy_prefix_my_custom_key"));
+
+        $otp = OtpGenerator::builder()
+            ->withDefaultSettings()
+            ->withKey('my_custom_key')
+            ->build();
+
+        $this->assertIsInt($otp);
+        $this->assertTrue(strlen($otp) === config('otp.length'));
     }
 
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::get
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpInvalidException
+     */
     public function test_builder_throwing_invalid_otp_exception(): void
     {
         $key = 'id';
@@ -97,6 +115,10 @@ class OtpBuilderTest extends TestCase
         $otp = OtpGenerator::get($key);
     }
 
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::builder
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpMalformedException
+     */
     public function test_builder_throwing_malformed_otp_exception_undefined_key(): void
     {
         $this->expectException(OtpMalformedException::class);
@@ -109,6 +131,10 @@ class OtpBuilderTest extends TestCase
             ->build();
     }
 
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::builder
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpMalformedException
+     */
     public function test_builder_throwing_malformed_otp_exception_undefined_prefix(): void
     {
         $this->expectException(OtpMalformedException::class);
@@ -121,6 +147,11 @@ class OtpBuilderTest extends TestCase
             ->build();
     }
 
+
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::builder
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpMalformedException
+     */
     public function test_builder_throwing_malformed_otp_exception_undefined_length(): void
     {
         $this->expectException(OtpMalformedException::class);

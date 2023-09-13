@@ -19,6 +19,12 @@ class OtpResolverTest extends TestCase
         ];
     }
 
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::create
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::verify
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::get
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::forget
+     */
     public function test_resolver_with_default_settings(): void
     {
         $key = 'id';
@@ -41,6 +47,11 @@ class OtpResolverTest extends TestCase
         $this->assertTrue(cache()->missing($cacheKey));
     }
 
+
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::get
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpInvalidException
+     */
     public function test_resolver_throwing_invalid_otp_exception(): void
     {
         $key = 'id';
@@ -48,6 +59,12 @@ class OtpResolverTest extends TestCase
         $otp = OtpGenerator::get($key);
     }
 
+
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::resolver
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpResolver::resolve
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpMalformedException
+     */
     public function test_resolver_throwing_malformed_otp_exception_undefined_key(): void
     {
         $this->expectException(OtpMalformedException::class);
@@ -55,6 +72,13 @@ class OtpResolverTest extends TestCase
         OtpGenerator::resolver()->resolve();
     }
 
+
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::resolver
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpResolver::resolve
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpResolver::withKey
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpMalformedException
+     */
     public function test_resolver_throwing_malformed_otp_exception_undefined_prefix(): void
     {
         $key = 'id';
@@ -63,6 +87,14 @@ class OtpResolverTest extends TestCase
         OtpGenerator::resolver()->withKey($key)->resolve();
     }
 
+    /**
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::createFrom
+     * @covers \RahmatWaisi\OtpAuth\Facades\OtpGenerator::resolver
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpResolver::resolve
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpResolver::withKey
+     * @covers \RahmatWaisi\OtpAuth\Core\OtpResolver::withPrefix
+     * @covers \RahmatWaisi\OtpAuth\Exceptions\OtpMalformedException
+     */
     public function test_resolver_with_custom_settings(): void
     {
         $length = 8;
@@ -106,6 +138,5 @@ class OtpResolverTest extends TestCase
 
         $this->assertTrue($exists);
         $this->assertTrue(cache()->has($cacheKey));
-
     }
 }
