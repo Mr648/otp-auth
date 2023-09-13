@@ -24,36 +24,41 @@ class OtpBuilderTest extends TestCase
      */
     public function test_builder_with_default_settings(): void
     {
-
-        $otp = OtpGenerator::createFrom('smth', 'id');
+        $prefix = 'something';
+        $key = 'id'; // $user->id
+        $otp = OtpGenerator::createFrom($prefix, $key);
         $this->assertIsInt($otp);
         $this->assertTrue(strlen(strval($otp))  === config('otp.length')); // ensure otp has 6 digits
-        $this->assertTrue(cache()->has("smth_id"));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
 
-        $otp = OtpGenerator::createFrom('smth', 'email');
+        $key = 'email'; // $user->email
+        $otp = OtpGenerator::createFrom($prefix, $key);
         $this->assertIsInt($otp);
-        $this->assertTrue(cache()->has("smth_email"));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
 
 
-        $otp = OtpGenerator::createFrom('smth', 'username', OtpType::STRING);
+        $key = 'username';// $user->username
+        $otp = OtpGenerator::createFrom($prefix, $key, OtpType::STRING);
         $this->assertIsNotInt($otp);
         $this->assertTrue(strlen($otp) === config('otp.length'));
         $this->assertTrue(is_string($otp));
-        $this->assertTrue(cache()->has("smth_username"));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
 
 
         $length = 12;
-        $otp = OtpGenerator::createFrom('smth', 'custom_key', OtpType::NUMBER, $length, now()->addDay());
+        $key = 'custom_key';
+        $otp = OtpGenerator::createFrom($prefix, $key, OtpType::NUMBER, $length, now()->addDay());
         $this->assertIsInt($otp);
         $this->assertTrue(strlen(strval($otp))  === $length); // ensure otp has 6 digits
-        $this->assertTrue(cache()->has("smth_custom_key"));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
 
         $length = 8;
-        $otp = OtpGenerator::createFrom('smth', 'whatever', OtpType::STRING, $length, now()->addDay());
+        $key = 'whatever';
+        $otp = OtpGenerator::createFrom($prefix, $key, OtpType::STRING, $length, now()->addDay());
         $this->assertIsNotInt($otp);
         $this->assertTrue(strlen($otp) === $length);
         $this->assertTrue(is_string($otp));
-        $this->assertTrue(cache()->has("smth_whatever"));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
     }
 
     /**
@@ -67,10 +72,13 @@ class OtpBuilderTest extends TestCase
      */
     public function test_builder_with_custom_settings(): void
     {
+        $prefix = 'dummy_prefix';
+        $key = 'my_custom_key'; // $user->id
+
         $length = 8;
         $otp = OtpGenerator::builder()
-            ->withPrefix('dummy_prefix')
-            ->withKey('my_custom_key')
+            ->withPrefix($prefix)
+            ->withKey($key)
             ->withType(OtpType::NUMBER)
             ->withTtl(now()->addMinutes(2))
             ->withLength($length)
@@ -78,12 +86,13 @@ class OtpBuilderTest extends TestCase
 
         $this->assertIsInt($otp);
         $this->assertTrue(strlen(strval($otp))  === $length); // ensure otp has 6 digits
-
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
 
         $length = 12;
+        $key = 'anotherthing';
         $otp = OtpGenerator::builder()
-            ->withPrefix('dummy_prefix')
-            ->withKey('my_custom_key')
+            ->withPrefix($prefix)
+            ->withKey($key)
             ->withType(OtpType::STRING)
             ->withTtl(now()->addMinutes(2))
             ->withLength($length)
@@ -93,15 +102,17 @@ class OtpBuilderTest extends TestCase
         $this->assertTrue(strlen($otp) === $length);
         $this->assertTrue(is_string($otp));
 
-        $this->assertTrue(cache()->has("dummy_prefix_my_custom_key"));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', $prefix, $key))));
 
+        $key = 'something_else';
         $otp = OtpGenerator::builder()
             ->withDefaultSettings()
-            ->withKey('my_custom_key')
+            ->withKey($key)
             ->build();
 
         $this->assertIsInt($otp);
         $this->assertTrue(strlen($otp) === config('otp.length'));
+        $this->assertTrue(cache()->has(md5(sprintf('%s_%s', config('otp.cache.prefix'), $key))));
     }
 
     /**

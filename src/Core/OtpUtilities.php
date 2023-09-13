@@ -49,7 +49,7 @@ abstract class OtpUtilities
 
     protected function getCacheKey(): string
     {
-        return sprintf('%s_%s', $this->prefix, $this->key);
+        return md5(sprintf('%s_%s', $this->prefix, $this->key));
     }
 
     abstract public function withDefaultSettings(): self;
