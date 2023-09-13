@@ -28,17 +28,20 @@ class OtpResolverTest extends TestCase
     public function test_resolver_with_default_settings(): void
     {
         $key = 'id';
-        $cacheKey = sprintf('%s_%s', config('otp.cache.prefix'), $key);
+        $plainCacheKey = sprintf('%s_%s', config('otp.cache.prefix'), $key);
+        $cacheKey = md5($plainCacheKey);
 
         $otp = OtpGenerator::create($key);
         $this->assertIsInt($otp);
         $this->assertTrue(cache()->has($cacheKey));
+        $this->assertTrue(cache()->missing($plainCacheKey));
 
         $this->assertTrue(OtpGenerator::verify($key, $otp));
         $this->assertTrue(OtpGenerator::get($key) === $otp);
 
         OtpGenerator::forget($key);
         $this->assertTrue(cache()->missing($cacheKey));
+        $this->assertTrue(cache()->missing($plainCacheKey));
 
 
         $otp = OtpGenerator::create($key);
@@ -100,11 +103,13 @@ class OtpResolverTest extends TestCase
         $length = 8;
         $prefix = 'dummy_prefix';
         $key = 'my_custom_key';
-        $cacheKey = sprintf('%s_%s', $prefix, $key);
+        $plainCacheKey = sprintf('%s_%s', $prefix, $key);
+        $cacheKey = md5($plainCacheKey);
 
         $otp = OtpGenerator::createFrom($prefix, $key);
         $this->assertIsInt($otp);
         $this->assertTrue(cache()->has($cacheKey));
+        $this->assertTrue(cache()->missing($plainCacheKey));
 
         // Check using resolve method
         $resolvedOtp = OtpGenerator::resolver()
