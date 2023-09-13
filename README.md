@@ -2,6 +2,11 @@
 
 <img src="https://banners.beyondco.de/Laravel%20OTP%20.png?theme=light&packageManager=composer+require&packageName=rahmatwaisi%2Fotp-auth&pattern=hexagons&style=style_1&description=Easily+generate+and+verify+an+OTP+using+Laravel+cache&md=2&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg" alt="rahmatwaisi-otp-auth">
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/rahmatwaisi/otp-auth.svg?style=flat-square)](https://packagist.org/packages/rahmatwaisi/otp-auth)
+[![Total Downloads](https://img.shields.io/packagist/dt/rahmatwaisi/otp-auth.svg?style=flat-square)](https://packagist.org/packages/rahmatwaisi/otp-auth)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+![Build Status](https://img.shields.io/endpoint?url=https://app.chipperci.com/projects/75a80767-87c7-4886-8c81-d3fd80423b2a/status/main&style=flat-square)
+
 
 ## Installation
 
