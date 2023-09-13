@@ -105,7 +105,7 @@ class OtpBuilder extends OtpUtilities
      */
     private function cacheOtp($otp)
     {
-        $cacheKey = sprintf('%s_%s', $this->prefix, $this->key);
+        $cacheKey = $this->getCacheKey();
 
         cache()->forget($cacheKey);
 
