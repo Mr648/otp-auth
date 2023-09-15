@@ -2,7 +2,7 @@
     "name": "rahmatwaisi/otp-auth",
     "license": "MIT",
     "description": "Easily Generate and Verify an OTP using laravel cache",
-    "homepage": "https://github.com/mr648/otp-auth",
+    "homepage": "https://github.com/rahmatwaisi/otp-auth",
     "type": "library",
     "keywords": [
         "otp-auth",
@@ -17,8 +17,8 @@
         "laravel otp"
     ],
     "support": {
-        "issues": "https://github.com/mr648/otp-auth/issues",
-        "source": "https://github.com/mr648/otp-auth"
+        "issues": "https://github.com/rahmatwaisi/otp-auth/issues",
+        "source": "https://github.com/rahmatwaisi/otp-auth"
     },
     "require": {
         "php": "^8.0.2",
